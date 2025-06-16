@@ -1,5 +1,6 @@
 # tests
 tests/testdata
+/cachex
 
 # Binaries for programs and plugins
 *.exe
