@@ -35,7 +35,6 @@ var PayloadHeaders = map[string]string{
 	"X-WAP-Profile":        "http://evil.com/evil.xml",
 	"X-ATT-DeviceId":       "GT-P7320/Evil",
 	"Device-Stock-UA":      "EvilUserAgent",
-	"Save-Data":            "on",
 	"X-HTTP-Host-Override": "evil.com",
 	"Forwarded-For":        "127.0.0.1",
 	"Via":                  "evil.com",
