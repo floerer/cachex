@@ -12,7 +12,6 @@ import (
 // Scanner orchestrates the batch scanning of URLs for cache-related vulnerabilities.
 type Scanner struct {
 	URLs          []string              // List of target URLs to scan
-	OutputFile    string                // File to write scan results
 	ScannerConfig *config.ScannerConfig // Configuration for scanner behavior and logging
 	PayloadConfig *config.PayloadConfig // Configuration for payload/header injection
 }
@@ -39,9 +38,9 @@ func (s *Scanner) Run() ([]scanner.ScannerOutput, []error) {
 
 		// Logger configuration: what to log, where, and how
 		LoggerArgs: scanner.LoggerArgs{
-			LogError:     s.ScannerConfig.LoggerConfig.LogError,
-			LogMode:      mapStrLogMode(s.ScannerConfig.LoggerConfig.LogMode),
-			LogTarget:    mapStrLogTarget(s.ScannerConfig.LoggerConfig.LogTarget),
+			LogError: s.ScannerConfig.LoggerConfig.LogError,
+			LogMode:  mapStrLogMode(s.ScannerConfig.LoggerConfig.LogMode),
+			//LogTarget:    mapStrLogTarget(s.ScannerConfig.LoggerConfig.LogTarget),
 			SkipTenative: s.ScannerConfig.LoggerConfig.SkipTenative,
 		},
 	}
@@ -59,9 +58,11 @@ func (s *Scanner) Run() ([]scanner.ScannerOutput, []error) {
 		logger.DisableDebug = true
 	}
 
-	if s.OutputFile != "" {
+	if s.ScannerConfig.LoggerConfig.OutputFile != "" {
 		internalScanner.LoggerArgs.LogTarget = mapStrLogTarget("both")
-		internalScanner.LoggerArgs.OutputFile = s.OutputFile
+		internalScanner.LoggerArgs.OutputFile = s.ScannerConfig.LoggerConfig.OutputFile
+	} else {
+		internalScanner.LoggerArgs.LogTarget = mapStrLogTarget("stdout")
 	}
 
 	// Run the batch scan with the prepared arguments

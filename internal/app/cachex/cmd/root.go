@@ -73,7 +73,6 @@ func Run(cfg *config.Config) error {
 	scanner := cachex.Scanner{
 		ScannerConfig: &cfg.ScannerConfig,
 		PayloadConfig: &cfg.PayloadConfig,
-		OutputFile:    outputFile,
 		URLs:          urls,
 	}
 	scanner.Run()

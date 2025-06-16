@@ -41,7 +41,7 @@ func DefaultConfig() *Config {
 			LoggerConfig: LoggerConfig{
 				LogError:     false,
 				LogMode:      "pretty",
-				LogTarget:    "stdout",
+				OutputFile:   "",
 				Debug:        false,
 				SkipTenative: true,
 			},

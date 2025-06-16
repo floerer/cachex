@@ -37,7 +37,7 @@ type PersistenceCheckerArgs struct {
 type LoggerConfig struct {
 	LogError     bool   `yaml:"log_error"`      // Flag to log errors to stderr
 	LogMode      string `yaml:"log_mode"`       // Mode of logging (pretty or JSON)
-	LogTarget    string `yaml:"log_target"`     // Log target (stdout, file, both)
+	OutputFile   string `yaml:"output_file"`    // File to write logs to (optional)
 	Debug        bool   `yaml:"debug"`          // Flag to enable debug logging
 	SkipTenative bool   `yaml:"skip_tentative"` // Flag to skip stdout logging of tentative vulnerabilities
 }

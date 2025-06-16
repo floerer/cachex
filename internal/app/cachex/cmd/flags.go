@@ -12,7 +12,6 @@ import (
 
 var (
 	urlsFilePath   string
-	outputFile     string
 	url            string
 	requestTimeout float64
 	jsonOutput     bool
@@ -98,7 +97,8 @@ func BuildFlags() []cli.Flag {
 			Name:        "output",
 			Aliases:     []string{"o"},
 			Usage:       "Write output to file",
-			Destination: &outputFile,
+			Destination: &cfg.ScannerConfig.LoggerConfig.OutputFile,
+			Value:       cfg.ScannerConfig.LoggerConfig.OutputFile,
 		},
 		&cli.StringFlag{
 			Name:    "payload-config-file",

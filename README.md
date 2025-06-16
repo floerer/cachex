@@ -217,9 +217,9 @@ persistence_checker:
 logger:
   log_error: false        # Whether to log failed or errored requests
   log_mode: pretty        # Log format: 'pretty' (CLI-style) or 'json'
-  log_target: stdout      # internal leave as it is
   debug: false            # Enable verbose debug logs
-  output_file: ""         # File path to save output (leave blank to disable file logging)
+  output_file: ""         # File path to save output (leave blank for logging to stdout only)
+  skip_tentative: true    # Skip logging tentative vulnerabilities
 ```
 
 ## How It Works
