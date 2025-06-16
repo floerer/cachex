@@ -14,6 +14,7 @@ var PayloadHeaders = map[string]string{
 	"X-Original-Host":           "evil.com",
 	"X-ProxyUser-Ip":            "127.0.0.1",
 	"X-Forwarded-Server":        "evil.com",
+	"X-Original-Scheme":         "https",
 	"X-Url-Scheme":              "https",
 	"X-Requested-With":          "XMLHttpRequest",
 	"X-Host-Override":           "evil.com",
@@ -40,7 +41,31 @@ var PayloadHeaders = map[string]string{
 	"Via":                  "evil.com",
 
 	// Exotic & CDN/Proxy-specific
-	"X-Original-Remote-Addr": "127.0.0.1",
-	"X-Forwarded":            "127.0.0.1",
-	"Forwarded-For-IP":       "127.0.0.1",
+	"X-Original-Remote-Addr":   "127.0.0.1",
+	"X-Forwarded":              "127.0.0.1",
+	"Forwarded-For-IP":         "127.0.0.1",
+	"X-Original-Forwarded-For": "127.0.0.1",
+	"Client-IP":                "127.0.0.1",
+	"Proxy-Client-IP":          "127.0.0.1",
+	"WL-Proxy-Client-IP":       "127.0.0.1",
+	"HTTP_X_FORWARDED_FOR":     "127.0.0.1",
+	"HTTP_CLIENT_IP":           "127.0.0.1",
+	"HTTP_FORWARDED_FOR":       "127.0.0.1",
+	"HTTP_FORWARDED":           "127.0.0.1",
+	"HTTP_VIA":                 "evil.com",
+	"REMOTE_ADDR":              "127.0.0.1",
+
+	// AWS/Cloudflare/CDN related
+	"X-Amzn-Trace-Id":       "Root=1-evil-trace-id",
+	"X-Azure-FDID":          "evil.com",
+	"X-Azure-ClientIP":      "127.0.0.1",
+	"X-Cloud-Trace-Context": "evil-trace-id",
+	"CF-Visitor":            "{\"scheme\":\"https\"}",
+	"CF-IPCountry":          "RU",
+	"CF-Ray":                "evil-ray",
+	"CF-Connecting-User":    "bad-user",
+
+	// Misc
+	"X-Temp-Header":         "evil",
+	"X-Http-Destinationurl": "http://evil.com",
 }
