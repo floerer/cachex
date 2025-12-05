@@ -18,5 +18,5 @@ var banner = `
 
 func PrintBanner() {
 	fmt.Fprint(os.Stderr, banner) // Print the ASCII banner
-	fmt.Fprintf(os.Stderr, "               v"+version.Version+", with <3 by @ayuxdev\n")
+	fmt.Fprintf(os.Stderr, "               v"+version.Version+", with <3 by @ayuxdev\n\n")
 }
