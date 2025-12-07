@@ -2,7 +2,8 @@
   <img src="images/cachex-logo.png" alt="cachex" width="100px">
   <br>
 </h1>
-<h3 align="center">Tool to detect cache poisoning vulnerabilities in Web API Endpoints</h3>
+
+<h3 align="center">A high-accuracy, behavioral cache poisoning scanner for modern Web APIs</h3>
 
 <p align="center">
   <img src="https://img.shields.io/badge/cacheX-blueviolet?style=flat-square">
@@ -12,104 +13,127 @@
 
 ![demo](images/cachex-demo.gif)
 
-## Features
+## 🌟 Why CacheX?
 
-- High-speed multi-threaded scanning
-- Accurate detection of response manipulation and cache persistence
-- Single and multi-header scan modes
-- YAML-based payload configuration
-- JSON or pretty output logging
-- Optional file-based result export
-- Tentative vs confirmed vulnerability tagging
+Most cache poisoning scanners only check:
 
-## Installation
+* whether a response changes with certain headers
+* or whether cache-related headers exist
+
+This produces **tons of false positives** and rarely confirms a real exploit.
+
+**CacheX is different.**
+
+It performs **behavioral diffing**, **multi-threaded poisoning**, and **persistence verification**, confirming only real, weaponizable cache poisoning.
+
+If CacheX says *[vuln]* - it's legit.
+
+## 🔥 Features
+
+* ⚡ **High-speed multi-threaded scanning**
+* 🎯 **Zero-FP design with behavioral diffing**
+* 🔁 **Real-time cache poisoning attempts**
+* 🧪 **Persistence confirmation for true vulnerabilities**
+* 🔍 **Single and multi-header scan modes**
+* 🧩 **YAML-based payload configuration**
+* 📤 **JSON or pretty output formats**
+* 📁 **Optional file-based export**
+* 🏷 **Tentative vs confirmed vuln tagging**
+
+## 🔧 Installation
 
 ```bash
 go install github.com/ayuxdev/cachex/cmd/cachex@latest
-````
+```
 
 Or build manually:
 
 ```bash
 git clone https://github.com/ayuxdev/cachex
 cd cachex
-make build
+go build -o cachex "cmd/cachex/main.go"
 ./cachex -h
 ```
 
-## Usage
+## 🚀 Usage
 
-### Scan a single URL
+### ▶️ Scan a single URL
 
 ```bash
 cachex -u https://example.com
 ```
 
-### Scan multiple targets
+### ▶️ Scan multiple targets
 
 ```bash
 cachex -l urls.txt
 ```
 
-### Scan URLs piped from another command
+### ▶️ Scan URLs via pipeline
 
 ```bash
 echo "https://example.com" | cachex
 ```
 
-or
+or:
 
 ```bash
 cat urls.txt | cachex
 ```
 
-### All CLI Flags
+---
 
-| Category          | Flag              | Description                              |
-| ----------------- | ----------------- | ---------------------------------------- |
-| Input             | `-u, --url`       | URL to scan                              |
-|                   | `-l, --list`      | File with list of URLs                   |
-| Concurrency       | `-t, --threads`   | Number of threads to use                 |
-|                   | `-m, --scan-mode` | `single` or `multi` header scan mode     |
-| HTTP Client       | `--timeout`       | Total request timeout                    |
-|                   | `--proxy`         | Proxy URL to use                         |
-| Persistence Check | `--no-chk-prst`   | Disable persistence check                |
-|                   | `--prst-requests` | Number of poisoning requests to send     |
-|                   | `--prst-threads`  | Threads to use for persistence poisoning |
-| Output            | `-o, --output`    | Output file (stdout if not specified)    |
-|                   | `-j, --json`      | Enable JSON output                       |
-| Payloads          | `--pcf`           | Path to custom payload config YAML       |
+## 📌 All CLI Flags
 
-## Example
+| Category          | Flag              | Description                 |
+| ----------------- | ----------------- | --------------------------- |
+| Input             | `-u, --url`       | URL to scan                 |
+|                   | `-l, --list`      | File with list of URLs      |
+| Concurrency       | `-t, --threads`   | Number of scanning threads  |
+|                   | `-m, --scan-mode` | `single` or `multi`         |
+| HTTP Client       | `--timeout`       | Total request timeout       |
+|                   | `--proxy`         | Proxy URL                   |
+| Persistence Check | `--no-chk-prst`   | Disable persistence checker |
+|                   | `--prst-requests` | Poisoning requests          |
+|                   | `--prst-threads`  | Threads for poisoning       |
+| Output            | `-o, --output`    | Output file                 |
+|                   | `-j, --json`      | JSON output                 |
+| Payloads          | `--pcf`           | Custom payload config file  |
+
+
+## 💡 Example
 
 ```bash
 cachex -l targets.txt -t 50 --pcf payloads.yaml --json -o results.json
 ```
 
-## Configuration
+## ⚙️ Configuration
 
-By default, these files are created:
+CacheX automatically loads:
 
-* `~/.config/cachex/config.yaml`
-* `~/.config/cachex/payloads.yaml`
+```
+~/.config/cachex/config.yaml
+~/.config/cachex/payloads.yaml
+```
 
 You can configure:
 
-* Custom payload headers
-* Request headers
-* Logging formats
-* Concurrency and timeout
-* Proxy and output preferences
+* Payload headers
+* Default request headers
+* Timeouts & concurrency
+* Logging mode
+* Proxy settings
+* Persistence checker behavior
 
-## Output Formats
+## 📝 Output Formats
 
-### Pretty Format
+### Pretty Output
 
 ```
 [vuln] [https://target.com] [Location Poisoning] [header: X-Forwarded-Host: evil.com] [poc: https://target.com?cache=XYZ]
 ```
 
-### JSON Format
+### JSON Output
 
 ```json
 {
@@ -155,84 +179,136 @@ You can configure:
 }
 ```
 
-## Scan Modes
+## 🎛 Scan Modes
 
-* `single`: scans each payload header independently (more precise)
-* `multi`: scans all payload headers together (faster, less precise)
+* `single`: precise, tests each header independently
+* `multi`: fast, tests all payload headers together
 
-## Payload Headers
+## 🧩 Payload Headers
 
-Defined in `~/.config/cachex/payloads.yaml`. Includes:
+Defined in:
+
+```
+~/.config/cachex/payloads.yaml
+```
+
+Example:
 
 ```yaml
 payload_headers:
-    Forwarded: for=127.0.0.1;host=evil.com;proto=https
-    X-Client-IP: 127.0.0.1
-    X-Custom-IP-Authorization: 127.0.0.1
-    X-Forwarded-For: 127.0.0.1
     X-Forwarded-Host: evil.com
-    X-Forwarded-Host-Override: evil.com
-    X-Forwarded-Port: "443"
-    X-Forwarded-Proto: https
-    X-Forwarded-Scheme: https
-    X-Forwarded-Server: evil.com
-    X-HTTP-Method-Override: POST
-    X-Host: evil.com
-    X-Host-Override: evil.com
-    X-Original-Host: evil.com
+    X-Forwarded-For: 127.0.0.1
     X-Original-URL: /evilpath
-    X-ProxyUser-Ip: 127.0.0.1
-    X-Requested-With: XMLHttpRequest
-    X-Rewrite-URL: /evilpath
-    X-Url-Scheme: https
+    X-Client-IP: 127.0.0.1
 ```
 
-## Configuration File (`config.yaml`)
-
-By default, `cachex` reads configuration from `~/.config/cachex/config.yaml`.
-
-This allows fine-tuned control over scanning behavior without needing to pass flags every time.
-
-### Example `config.yaml`
+## 📁 Configuration File Example (`config.yaml`)
 
 ```yaml
-scan_mode: single         # Scan mode: 'single' (more precise) or 'multi' (faster)
-threads: 25               # Number of concurrent scanning threads
+scan_mode: single
+threads: 25
 
-request_headers:          # Standard headers sent with every request (avoid adding payload or injection headers here to prevent scan issues)
+request_headers:
   Accept: '*/*'
-  User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36
+  User-Agent: Mozilla/5.0 (...)
 
 client:
-  dial_timeout: 5         # Dial timeout in seconds (TCP connection)
-  handshake_timeout: 5    # TLS handshake timeout in seconds
-  response_timeout: 10    # Max time to wait for a server response
-  proxy_url: ""           # Optional proxy URL (e.g., http://127.0.0.1:8080)
+  dial_timeout: 5
+  handshake_timeout: 5
+  response_timeout: 10
+  proxy_url: ""
 
 persistence_checker:
-  enabled: true             # Enable/disable persistence checking
-  num_requests_to_send: 10  # Number of attempts to poison the cache
-  threads: 5                # Threads to use for persistence scanning
+  enabled: true
+  num_requests_to_send: 10
+  threads: 5
 
 logger:
-  log_error: false        # Whether to log failed or errored requests
-  log_mode: pretty        # Log format: 'pretty' (CLI-style) or 'json'
-  debug: false            # Enable verbose debug logs
-  output_file: ""         # File path to save output (leave blank for logging to stdout only)
-  skip_tentative: true    # Skip logging tentative vulnerabilities
+  log_error: false
+  log_mode: pretty
+  debug: false
+  output_file: ""
+  skip_tentative: true
 ```
 
-## How It Works
+## 🧠 How CacheX Works
 
-1. Sends a baseline request
-2. Injects headers and observes differences
-3. Confirms cache persistence via repeat requests
-4. Logs the vulnerability with optional PoC link
+1. Fetches baseline response
+2. Injects payload headers
+3. Detects response manipulation (body, code, redirect)
+4. If changed → launches concurrent poisoning attempts
+5. Fetches clean requests
+6. If poisoned response persists → confirmed vulnerability
+7. Outputs PoC link
 
-## Contribute
+## 📁 Project Structure
 
-Sure, PR's are welcome!
+```console
+cachex/
+├── cmd/
+│   └── cachex/
+│       └── main.go                # CLI entrypoint
+│
+├── internal/
+│   ├── app/
+│   │   └── cachex/
+│   │       └── cmd/
+│   │           ├── banner.go      # ASCII banner
+│   │           ├── flags.go       # CLI flags + config binding
+│   │           ├── helper.go      # Help message builder
+│           ├── root.go        # Main CLI logic & runner
+│           └── utils.go           # File helpers
+│
+│   ├── pkg/
+│   │   ├── client/
+│   │   │   ├── client.go          # Custom HTTP client & transport
+│   │   │   └── request.go         # Fetch + send raw requests
+│   │   ├── config/
+│   │   │   └── config.go          # Legacy internal config
+│   │   └── logger/
+│   │       ├── colors.go          # Color themes
+│   │       └── logger.go          # Pretty logger (info/warn/debug/vuln)
+│
+│   └── scanner/
+│       ├── core.go                # Core poisoning test logic
+│       ├── detector.go            # Behavioral response diffing
+│       ├── logger.go              # Pretty + JSON output formatter
+│       ├── output.go              # JSON serialization helpers
+│       ├── persistchk.go          # Persistence checker (real-time poisoning)
+│       ├── scanner.go             # Scan controller (single/multi mode)
+│       ├── types.go               # All scanner structs & enums
+│       └── utils.go               # Cache buster, merging maps, helpers
+│
+├── pkg/
+│   └── cachex/
+│       ├── scanner.go             # Public API wrapper for internal scanner
+│       ├── utils.go               # Config mappers (log mode, scan mode)
+│       └── validate.go            # Config validation
+│
+│   └── config/
+│       ├── config.go              # YAML config schema
+│       ├── default.go             # Default paths + default config
+│       └── payloads.go            # Default payload headers
+│
+├── .github/workflows/
+│   └── release.yml                # Automated builds via GoReleaser
+│
+├── images/
+│   ├── cachex-logo.png            # Logo
+│   └── cachex-demo.gif            # Showcase GIF
+│
+├── .goreleaser.yaml               # Multi-platform binary releases
+├── .gitignore
+├── go.mod
+├── go.sum
+├── LICENSE
+└── Makefile                       # Build / install helpers
+```
 
-## License
+## 🤝 Contribute
+
+Sure, PRs are welcome!
+
+## 📜 License
 
 MIT © [@ayuxdev](https://github.com/ayuxdev)
