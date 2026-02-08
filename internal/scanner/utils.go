@@ -36,7 +36,10 @@ func createCacheBusterURL(url, paramValue string) string {
 
 // RemoveURLQueryParams removes the query parameters from the given URL
 func removeURLQueryParams(url string) string {
-	parsedURL, _ := urlparser.Parse(url) // ignoring errors
+	parsedURL, err := urlparser.Parse(url)
+	if err != nil || parsedURL == nil {
+		return url
+	}
 	parsedURL.RawQuery = ""
 
 	return parsedURL.String()
